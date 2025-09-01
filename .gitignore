@@ -1,4 +1,10 @@
+node_modules/
+dist/
+.vite/
+.DS_Store
+npm-debug.log*
 .sass-cache/
 *.css.map
 *.sass.map
 *.scss.map
+package-lock.json
