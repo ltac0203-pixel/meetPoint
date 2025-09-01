@@ -1,51 +1,49 @@
-import React, { useState } from 'react';
-import { MatchRequest } from './types';
+import React from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
+
+import Home from './pages/Home';
+import SignUp from './pages/SignUp';
+import Login from './pages/Login';
+import NewRecruitment from './pages/NewRecruitment';
+import RecruitmentDetails from './pages/RecruitmentDetails';
+import MyPage from './pages/MyPage';
 
 function App() {
-  const [requests, setRequests] = useState<MatchRequest[]>([]);
-  const [team, setTeam] = useState('');
-  const [datetime, setDatetime] = useState('');
-  const [message, setMessage] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const match = requests.find(r => r.datetime === datetime);
-    if (match) {
-      setMessage(`Matched ${team} with ${match.team} on ${new Date(datetime).toLocaleString()}`);
-      setRequests(requests.filter(r => r.id !== match.id));
-    } else {
-      const newRequest: MatchRequest = {
-        id: Date.now(),
-        team,
-        datetime,
-      };
-      setRequests([...requests, newRequest]);
-      setMessage('Waiting for opponent...');
-    }
-    setTeam('');
-    setDatetime('');
-  };
-
   return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1>MeetPoint</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            Team Name:
-            <input value={team} onChange={e => setTeam(e.target.value)} required />
-          </label>
-        </div>
-        <div>
-          <label>
-            Date & Time:
-            <input type="datetime-local" value={datetime} onChange={e => setDatetime(e.target.value)} required />
-          </label>
-        </div>
-        <button type="submit">Find Match</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+    <>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+              MeetPoint
+            </Link>
+          </Typography>
+          <Button color="inherit" component={Link} to="/login">
+            Login
+          </Button>
+          <Button color="inherit" component={Link} to="/signup">
+            Sign Up
+          </Button>
+          <Button color="inherit" component={Link} to="/recruitments/new">
+            Create Recruitment
+          </Button>
+          <Button color="inherit" component={Link} to="/mypage">
+            My Page
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <Container sx={{ mt: 4 }}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/recruitments/new" element={<NewRecruitment />} />
+          <Route path="/recruitments/:id" element={<RecruitmentDetails />} />
+          <Route path="/mypage" element={<MyPage />} />
+        </Routes>
+      </Container>
+    </>
   );
 }
 
